@@ -40,6 +40,7 @@ public class CryptoCurrencyService {
         for (CryptoCurrencyRoster cryptoCurrencyRoster : CryptoCurrencyRoster.values()) {
             CryptoCurrency[] arrayOfCryptoCurrency = restTemplate.getForObject(currencyApiUrl + cryptoCurrencyRoster.getId(), CryptoCurrency[].class);
             if (arrayOfCryptoCurrency != null) {
+
                 cryptoCurrencyList.addAll(Arrays.asList(arrayOfCryptoCurrency));
             }
         }
@@ -57,15 +58,19 @@ public class CryptoCurrencyService {
     @Transactional
     public void registerUserAndCrypto(String username, String symbol) {
         Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()){
+        if (user.isEmpty()) {
+            CryptoCurrencyAndUser cryptoCurrencyAndUser = new CryptoCurrencyAndUser();
+            cryptoCurrencyAndUser.setUser(createUser(username));
             CryptoCurrency currency = cryptoCurrencyRepository.findBySymbol(symbol.toUpperCase(Locale.ROOT));
-//            CryptoCurrencyAndUser cryptoCurrencyAndUser = new CryptoCurrencyAndUser();
-//            cryptoCurrencyAndUser.setUser(user.get());
-//            cryptoCurrencyAndUser.getSavedCurrencies().put(currency.getSymbol(),currency.getPrice_usd());
-//            cryptoCurrencyAndUserRepository.save(cryptoCurrencyAndUser);
-
+            cryptoCurrencyAndUser.setCryptoCurrencyPrice(currency.getPrice_usd());
+            cryptoCurrencyAndUser.setCryptoCurrencyId(currency.getId());
+            cryptoCurrencyAndUserRepository.save(cryptoCurrencyAndUser);
         }
     }
 
-
+    public User createUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        return userRepository.save(user);
+    }
 }

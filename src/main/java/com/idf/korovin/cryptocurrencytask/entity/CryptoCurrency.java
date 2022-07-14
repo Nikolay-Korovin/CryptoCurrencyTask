@@ -6,11 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
+@Table(name = "crypto_currency")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,11 +19,17 @@ import javax.persistence.Id;
 public class CryptoCurrency {
 
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "symbol")
     private String symbol;
+    @Column(name = "name")
     private String name;
+    @Column(name = "nameid")
     private String nameid;
+    @Column(name = "rank")
     private int rank;
+    @Column(name = "price_usd")
     private double price_usd;
 
 }
