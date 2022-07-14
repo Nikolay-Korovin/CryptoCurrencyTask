@@ -1,6 +1,5 @@
 package com.idf.korovin.cryptocurrencytask.entity;
 
-
 import java.util.stream.Stream;
 
 public enum CryptoCurrencyRoster {

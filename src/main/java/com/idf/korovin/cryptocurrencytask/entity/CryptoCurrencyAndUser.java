@@ -23,4 +23,8 @@ public class CryptoCurrencyAndUser {
 
     @Column(name = "crypto_currency_price")
     private Double cryptoCurrencyPrice;
+
+    @Column(name = "symbol")
+    private String cryptoCurrencySymbol;
+
 }

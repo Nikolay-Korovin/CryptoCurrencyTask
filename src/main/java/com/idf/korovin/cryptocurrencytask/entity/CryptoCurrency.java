@@ -19,7 +19,6 @@ import javax.persistence.*;
 public class CryptoCurrency {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "symbol")
     private String symbol;

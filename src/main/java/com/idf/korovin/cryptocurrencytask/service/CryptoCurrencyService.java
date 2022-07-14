@@ -9,7 +9,6 @@ import com.idf.korovin.cryptocurrencytask.repository.CryptoCurrencyAndUserReposi
 import com.idf.korovin.cryptocurrencytask.repository.CryptoCurrencyRepository;
 import com.idf.korovin.cryptocurrencytask.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,23 +16,18 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-@AllArgsConstructor  //переделать так же везде
+@AllArgsConstructor
 public class CryptoCurrencyService {
 
+    private final RestTemplate restTemplate;
 
-    private final RestTemplate restTemplate;//переделать так же везде
+    private final CryptoCurrencyRepository cryptoCurrencyRepository;
 
+    private final UserRepository userRepository;
 
-    private final CryptoCurrencyRepository cryptoCurrencyRepository;//переделать так же везде
-
-
-    private final UserRepository userRepository;//переделать так же везде
-
-
-    private final CryptoCurrencyAndUserRepository cryptoCurrencyAndUserRepository;//переделать так же везде
+    private final CryptoCurrencyAndUserRepository cryptoCurrencyAndUserRepository;
 
     private final String currencyApiUrl = "https://api.coinlore.net/api/ticker/?id=";
-
 
     public List<CryptoCurrency> getCurrencyList() {
         List<CryptoCurrency> cryptoCurrencyList = new ArrayList<>();
@@ -46,7 +40,6 @@ public class CryptoCurrencyService {
         }
         return cryptoCurrencyList;
     }
-
 
     public CryptoCurrencyDto getCryptoCurrency(Long id) {
         return cryptoCurrencyRepository.findById(id)
@@ -64,13 +57,13 @@ public class CryptoCurrencyService {
             CryptoCurrency currency = cryptoCurrencyRepository.findBySymbol(symbol.toUpperCase(Locale.ROOT));
             cryptoCurrencyAndUser.setCryptoCurrencyPrice(currency.getPrice_usd());
             cryptoCurrencyAndUser.setCryptoCurrencyId(currency.getId());
+            cryptoCurrencyAndUser.setCryptoCurrencySymbol(symbol);
             cryptoCurrencyAndUserRepository.save(cryptoCurrencyAndUser);
         }
     }
 
+
     public User createUser(String username) {
-        User user = new User();
-        user.setUsername(username);
-        return userRepository.save(user);
+        return userRepository.save(new User(username));
     }
 }
